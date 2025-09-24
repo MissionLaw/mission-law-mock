@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { use } from 'react'
 import useSWR from 'swr'
 import {
   ClockIcon,
@@ -15,16 +15,17 @@ import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     serviceId: string
-  }
+  }>
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function ServiceDetailPage({ params }: PageProps) {
+  const resolvedParams = use(params)
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/services/${params.serviceId}`,
+    `/api/services/${resolvedParams.serviceId}`,
     fetcher
   )
 

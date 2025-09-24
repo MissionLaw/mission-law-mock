@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import useSWR from 'swr'
 import {
   UserIcon,
@@ -16,14 +16,15 @@ import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     serviceId: string
-  }
+  }>
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function AdminServiceDetailPage({ params }: PageProps) {
+  const resolvedParams = use(params)
   const [isEditing, setIsEditing] = useState(false)
   const [editData, setEditData] = useState({
     status: '' as ServiceStatus,
@@ -34,7 +35,7 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
   const [saving, setSaving] = useState(false)
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/services/${params.serviceId}`,
+    `/api/services/${resolvedParams.serviceId}`,
     fetcher
   )
 
@@ -58,7 +59,7 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
 
     setSaving(true)
     try {
-      const response = await fetch(`/api/services/${service.id}`, {
+      const response = await fetch(`/api/services/${resolvedParams.serviceId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

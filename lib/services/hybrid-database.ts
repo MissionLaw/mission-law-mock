@@ -1,6 +1,9 @@
 // Hybrid service that tries database first, falls back to mock data
 import { mockServices, mockClients, mockAttorneys, mockUsers } from '../mock-data'
 
+// In-memory store for created services when database is unavailable
+const createdServices: any[] = []
+
 export class HybridDatabaseService {
   private static isDatabaseAvailable = false
 
@@ -59,8 +62,9 @@ export class HybridDatabaseService {
       }
     }
 
-    // Mock data filtering logic
-    let services = mockServices.map(service => ({
+    // Mock data filtering logic - combine mock services with created services
+    const allServices = [...mockServices, ...createdServices]
+    let services = allServices.map(service => ({
       ...service,
       client: mockClients.find(c => c.id === service.clientId),
       attorney: mockAttorneys.find(a => a.name === service.assignedAttorney),
@@ -100,7 +104,9 @@ export class HybridDatabaseService {
       }
     }
 
-    const service = mockServices.find(s => s.id === id)
+    // Check both mock services and created services
+    const allServices = [...mockServices, ...createdServices]
+    const service = allServices.find(s => s.id === id)
     if (!service) return null
 
     return {
@@ -126,7 +132,7 @@ export class HybridDatabaseService {
       }
     }
 
-    // Mock creation - in a real app this would persist to memory/localStorage
+    // Mock creation - store in memory for session
     const newService = {
       id: `service-${Date.now()}`,
       title: data.title,
@@ -138,6 +144,9 @@ export class HybridDatabaseService {
       formData: data.formData,
       notes: []
     }
+
+    // Store the service in our in-memory array
+    createdServices.push(newService)
 
     const client = mockClients.find(c => c.id === data.clientId)
     return {
@@ -162,7 +171,17 @@ export class HybridDatabaseService {
       }
     }
 
-    // Mock update - in a real app this would update the stored data
+    // Mock update - update the service in our in-memory store
+    const serviceIndex = createdServices.findIndex(s => s.id === id)
+    if (serviceIndex !== -1) {
+      const currentService = createdServices[serviceIndex]
+      createdServices[serviceIndex] = {
+        ...currentService,
+        ...data,
+        updatedAt: new Date().toISOString()
+      }
+    }
+
     return await this.getServiceById(id)
   }
 
