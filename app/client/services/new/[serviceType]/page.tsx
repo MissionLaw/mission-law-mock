@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { AuthService } from '@/lib/auth'
 import { SERVICE_TEMPLATES } from '@/lib/constants'
@@ -8,12 +8,13 @@ import { ServiceType, ServiceTemplate, ServiceFormField } from '@/lib/types'
 import { Button } from '@/components/ui/Button'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     serviceType: ServiceType
-  }
+  }>
 }
 
 export default function ServiceRequestPage({ params }: PageProps) {
+  const resolvedParams = use(params)
   const router = useRouter()
   const [template, setTemplate] = useState<ServiceTemplate | null>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
@@ -21,7 +22,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const foundTemplate = SERVICE_TEMPLATES.find(t => t.type === params.serviceType)
+    const foundTemplate = SERVICE_TEMPLATES.find(t => t.type === resolvedParams.serviceType)
     if (foundTemplate) {
       setTemplate(foundTemplate)
       const initialData: Record<string, any> = {}
@@ -30,7 +31,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
       })
       setFormData(initialData)
     }
-  }, [params.serviceType])
+  }, [resolvedParams.serviceType])
 
   const handleInputChange = (fieldId: string, value: any) => {
     setFormData(prev => ({
@@ -57,7 +58,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
         },
         body: JSON.stringify({
           title: generateTitle(template!, formData),
-          type: params.serviceType,
+          type: resolvedParams.serviceType,
           clientId: user.clientId,
           formData
         })
@@ -102,7 +103,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
             placeholder={field.placeholder}
             value={value}
             onChange={(e) => handleInputChange(field.id, e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2 text-gray-900 placeholder-gray-500 bg-white"
           />
         )
 
@@ -115,7 +116,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
             placeholder={field.placeholder}
             value={value}
             onChange={(e) => handleInputChange(field.id, e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2 text-gray-900 placeholder-gray-500 bg-white"
           />
         )
 
@@ -126,7 +127,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
             required={field.required}
             value={value}
             onChange={(e) => handleInputChange(field.id, e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2 text-gray-900 placeholder-gray-500 bg-white"
           >
             <option value="">Select an option</option>
             {field.options?.map((option) => (
@@ -145,7 +146,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
             required={field.required}
             value={value}
             onChange={(e) => handleInputChange(field.id, e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2 text-gray-900 placeholder-gray-500 bg-white"
           />
         )
 

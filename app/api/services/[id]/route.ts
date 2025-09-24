@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { HybridDatabaseService } from '@/lib/services/hybrid-database'
+import { DatabaseService } from '@/lib/services/database'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const service = await HybridDatabaseService.getServiceById(params.id)
+    const { id } = await params
+    const service = await DatabaseService.getServiceById(id)
 
     if (!service) {
       return NextResponse.json(
@@ -27,9 +28,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
 
     const updateData: any = {}
@@ -40,7 +42,7 @@ export async function PATCH(
 
     if (body.assignedAttorney) {
       // Find attorney by name and get their ID
-      const attorney = await HybridDatabaseService.getAttorneyByName(body.assignedAttorney)
+      const attorney = await DatabaseService.getAttorneyByName(body.assignedAttorney)
       updateData.assignedAttorneyId = attorney?.id || null
     }
 
@@ -48,7 +50,7 @@ export async function PATCH(
       updateData.notes = body.notes
     }
 
-    const service = await HybridDatabaseService.updateService(params.id, updateData)
+    const service = await DatabaseService.updateService(id, updateData)
 
     if (!service) {
       return NextResponse.json(
