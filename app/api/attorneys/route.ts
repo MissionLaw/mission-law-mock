@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { HybridDatabaseService } from '@/lib/services/hybrid-database'
+import { DatabaseService } from '@/lib/services/database'
 
 export async function GET(request: NextRequest) {
   try {
-    const attorneys = await HybridDatabaseService.getAttorneys()
+    const attorneys = await DatabaseService.getAttorneys()
     return NextResponse.json({ attorneys })
   } catch (error) {
     console.error('Error fetching attorneys:', error)

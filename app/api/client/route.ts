@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { HybridDatabaseService } from '@/lib/services/hybrid-database'
+import { DatabaseService } from '@/lib/services/database'
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const clientId = searchParams.get('id')
 
     if (clientId) {
-      const client = await HybridDatabaseService.getClientById(clientId)
+      const client = await DatabaseService.getClientById(clientId)
 
       if (!client) {
         return NextResponse.json(
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ client })
     }
 
-    const clients = await HybridDatabaseService.getClients()
+    const clients = await DatabaseService.getClients()
     return NextResponse.json({ clients })
   } catch (error) {
     console.error('Error fetching client data:', error)

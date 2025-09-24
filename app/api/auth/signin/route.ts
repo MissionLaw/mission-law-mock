@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { HybridDatabaseService } from '@/lib/services/hybrid-database'
+import { DatabaseService } from '@/lib/services/database'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const userData = await HybridDatabaseService.getUserByEmail(email)
+    const userData = await DatabaseService.getUserByEmail(email)
 
     if (userData) {
       const user = {

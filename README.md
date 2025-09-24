@@ -12,6 +12,8 @@ npm run dev       # Start development server
 # Open http://localhost:3001
 ```
 
+Note: `develop` is the default branch. For development, use feature branches with your initials and a feature name, like `bc/nda-document-upload`
+
 ## 🔐 Demo Accounts
 
 **Client Account:**
@@ -51,19 +53,15 @@ npm run dev       # Start development server
 - **Icons**: Heroicons
 - **State**: React hooks + SWR
 
-## 🗄️ Database (Optional)
+## 🗄️ Database
 
-The app uses a smart hybrid system:
-
-- **Database-first**: Uses PostgreSQL when available
-- **Fallback**: Seamlessly falls back to mock data
-- **Session persistence**: Maintains created services in memory
+The app uses PostgreSQL with Supabase for local development.
 
 ### Database Setup
 
 ```bash
-# Full database setup (optional)
-npm run setup     # Starts Supabase, migrates, seeds data
+# Full database setup
+npm run setup     # Starts Supabase, applies schema, seeds data
 
 # Manual setup
 npm run db:start  # Start local Supabase
