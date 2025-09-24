@@ -1,0 +1,48 @@
+{
+  "name": "mission-law-mock",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --fix",
+    "script": "set -a && source .env.local && tsx scripts/index.ts",
+    "setup": "tsx scripts/setup.ts",
+    "db:start": "npx supabase start",
+    "db:stop": "npx supabase stop",
+    "db:studio": "open http://localhost:54323",
+    "dbdiff": "npx supabase db diff --use-migra -f ",
+    "db:migrate": "npx supabase migration up",
+    "db:reset": "npx supabase db reset",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.1.5",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.57.4",
+    "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.5",
+    "next": "15.5.4",
+    "postgres": "^3.4.7",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "postcss": "^8",
+    "supabase": "^2.45.5",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5"
+  }
+}
