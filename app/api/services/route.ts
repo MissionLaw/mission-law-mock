@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { HybridDatabaseService } from '@/lib/services/hybrid-database'
+import { DatabaseService } from '@/lib/services/database'
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       ...(search && { search }),
     }
 
-    const services = await HybridDatabaseService.getServices(filters)
+    const services = await DatabaseService.getServices(filters)
 
     return NextResponse.json({
       services,
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const service = await HybridDatabaseService.createService({
+    const service = await DatabaseService.createService({
       title: body.title,
       type: body.type,
       clientId: body.clientId,

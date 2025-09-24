@@ -139,22 +139,27 @@ export class DatabaseService {
 
   // User operations
   static async getUserByEmail(email: string) {
-    const result = await db
-      .select({
-        user: users,
-        client: clients,
-      })
-      .from(users)
-      .leftJoin(clients, eq(users.clientId, clients.id))
-      .where(eq(users.email, email))
-      .limit(1)
+    try {
+      const result = await db
+        .select({
+          user: users,
+          client: clients,
+        })
+        .from(users)
+        .leftJoin(clients, eq(users.clientId, clients.id))
+        .where(eq(users.email, email))
+        .limit(1)
 
-    if (result.length === 0) return null
+      if (result.length === 0) return null
 
-    const { user, client } = result[0]
-    return {
-      ...user,
-      client,
+      const { user, client } = result[0]
+      return {
+        user,
+        client,
+      }
+    } catch (error) {
+      console.error('Database error in getUserByEmail:', error)
+      throw error
     }
   }
 
