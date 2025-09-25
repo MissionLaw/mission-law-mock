@@ -163,5 +163,7 @@ export async function seed() {
   } catch (error) {
     console.error('❌ Error seeding database:', error)
     throw error
+  } finally {
+    process.exit(0)
   }
 }

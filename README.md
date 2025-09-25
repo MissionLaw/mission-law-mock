@@ -9,7 +9,7 @@ npm install       # Install dependencies
 npm run setup     # Starts Supabase, applies schema, seeds data
 npm run dev       # Start development server
 
-# Open http://localhost:3001
+# Open http://localhost:3000
 ```
 
 Note: `develop` is the default branch. For development, use feature branches with your initials and a feature name, like `bc/nda-document-upload`
