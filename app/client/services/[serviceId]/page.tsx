@@ -7,14 +7,12 @@ import {
   UserIcon,
   CalendarDaysIcon,
   DocumentArrowDownIcon,
-  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 import { Service } from '@/lib/types'
-import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
+import { SERVICE_TYPES } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
-import { getUrgencyDisplay } from '@/app/utils/getUrgencyDisplay'
 import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 interface PageProps {
@@ -76,7 +74,6 @@ export default function ServiceDetailPage({ params }: PageProps) {
   }
 
   const statusSteps = getStatusSteps(service.status)
-  const urgencyDisplay = getUrgencyDisplay(service.urgency)
 
   return (
     <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">

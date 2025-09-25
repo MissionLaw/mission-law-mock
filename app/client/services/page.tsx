@@ -10,7 +10,6 @@ import { SERVICE_TYPES } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
-import { getUrgencyDisplay } from '@/app/utils/getUrgencyDisplay'
 import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())

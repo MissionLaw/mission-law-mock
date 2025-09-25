@@ -16,7 +16,6 @@ import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
-import { getUrgencyDisplay } from '@/app/utils/getUrgencyDisplay'
 import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 interface PageProps {
