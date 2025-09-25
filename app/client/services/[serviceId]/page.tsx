@@ -6,13 +6,15 @@ import {
   ClockIcon,
   UserIcon,
   CalendarDaysIcon,
-  DocumentArrowDownIcon
+  DocumentArrowDownIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 import { Service } from '@/lib/types'
 import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
+import { getUrgencyDisplay } from '@/app/utils/getUrgencyDisplay'
 
 interface PageProps {
   params: Promise<{
@@ -73,6 +75,7 @@ export default function ServiceDetailPage({ params }: PageProps) {
   }
 
   const statusSteps = getStatusSteps(service.status)
+  const urgencyDisplay = getUrgencyDisplay(service.urgency)
 
   return (
     <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -82,7 +85,18 @@ export default function ServiceDetailPage({ params }: PageProps) {
             <h1 className="text-3xl font-bold text-gray-900">{service.title}</h1>
             <p className="mt-2 text-gray-600">{SERVICE_TYPES[service.type]}</p>
           </div>
-          <StatusBadge status={service.status} />
+          <div className="flex items-center space-x-3">
+            {(() => {
+              const IconComponent = urgencyDisplay.icon;
+              return (
+                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${urgencyDisplay.bgColor} ${urgencyDisplay.color}`}>
+                  <IconComponent className="h-4 w-4 mr-1" />
+                  {urgencyDisplay.label}
+                </div>
+              );
+            })()}
+            <StatusBadge status={service.status} />
+          </div>
         </div>
       </div>
 
@@ -181,6 +195,21 @@ export default function ServiceDetailPage({ params }: PageProps) {
                     </dd>
                   </div>
                 </div>
+
+                {(() => {
+                  const IconComponent = urgencyDisplay.icon;
+                  return (
+                    <div className="flex items-center">
+                      <IconComponent className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Urgency Level</dt>
+                        <dd className={`text-sm font-medium ${urgencyDisplay.color}`}>
+                          {urgencyDisplay.label}
+                        </dd>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {service.assignedAttorney && (
                   <div className="flex items-center">

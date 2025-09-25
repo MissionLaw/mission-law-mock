@@ -95,6 +95,7 @@ export class DatabaseService {
   static async createService(data: {
     title: string
     type: 'nda' | 'employee_onboarding' | 'contract_review'
+    urgency?: 'asap' | 'fast' | 'no_rush'
     clientId: string
     formData: Record<string, unknown>
   }) {
@@ -103,6 +104,7 @@ export class DatabaseService {
       .values({
         ...data,
         status: 'submitted',
+        urgency: data.urgency || 'no_rush',
       })
       .returning()
 
@@ -113,6 +115,7 @@ export class DatabaseService {
 
   static async updateService(id: string, data: {
     status?: 'submitted' | 'legal_review' | 'client_review' | 'complete'
+    urgency?: 'asap' | 'fast' | 'no_rush'
     assignedAttorneyId?: string
     notes?: string[]
   }) {
@@ -120,6 +123,10 @@ export class DatabaseService {
 
     if (data.status) {
       updateData.status = data.status
+    }
+
+    if (data.urgency) {
+      updateData.urgency = data.urgency
     }
 
     if (data.assignedAttorneyId !== undefined) {

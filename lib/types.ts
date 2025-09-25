@@ -2,6 +2,8 @@ export type ServiceType = 'nda' | 'employee_onboarding' | 'contract_review'
 
 export type ServiceStatus = 'submitted' | 'legal_review' | 'client_review' | 'complete'
 
+export type ServiceUrgency = 'asap' | 'fast' | 'no_rush'
+
 export interface Client {
   id: string
   name: string
@@ -15,6 +17,7 @@ export interface Service {
   title: string
   type: ServiceType
   status: ServiceStatus
+  urgency: ServiceUrgency
   clientId: string
   createdAt: string
   updatedAt: string

@@ -40,6 +40,10 @@ export async function PATCH(
       updateData.status = body.status
     }
 
+    if (body.urgency) {
+      updateData.urgency = body.urgency
+    }
+
     if (body.assignedAttorney) {
       // Find attorney by name and get their ID
       const attorney = await DatabaseService.getAttorneyByName(body.assignedAttorney)

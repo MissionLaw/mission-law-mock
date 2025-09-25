@@ -20,6 +20,18 @@ export const SERVICE_STATUS_COLORS = {
   complete: 'bg-green-100 text-green-800'
 }
 
+export const SERVICE_URGENCY_LABELS = {
+  asap: 'ASAP',
+  fast: 'Fast',
+  no_rush: 'No Rush'
+}
+
+export const SERVICE_URGENCY_COLORS = {
+  asap: 'bg-red-100 text-red-800',
+  fast: 'bg-orange-100 text-orange-800',
+  no_rush: 'bg-green-100 text-green-800'
+}
+
 export const SERVICE_TEMPLATES: ServiceTemplate[] = [
   {
     type: 'nda',

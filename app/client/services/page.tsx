@@ -10,6 +10,8 @@ import { SERVICE_TYPES } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
+import { getUrgencyDisplay } from '@/app/utils/getUrgencyDisplay'
+import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -89,7 +91,10 @@ export default function ClientServicesPage() {
                         <h3 className="text-sm font-medium text-gray-900 truncate">
                           {service.title}
                         </h3>
-                        <StatusBadge status={service.status} />
+                        <div className='flex gap-2'>
+                          <StatusBadge status={service.status} />
+                          <UrgencyBadge urgency={service.urgency} />
+                        </div>
                       </div>
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <span>{SERVICE_TYPES[service.type]}</span>
