@@ -6,13 +6,14 @@ import {
   ClockIcon,
   UserIcon,
   CalendarDaysIcon,
-  DocumentArrowDownIcon
+  DocumentArrowDownIcon,
 } from '@heroicons/react/24/outline'
 import { Service } from '@/lib/types'
-import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
+import { SERVICE_TYPES } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
+import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 interface PageProps {
   params: Promise<{
@@ -82,7 +83,10 @@ export default function ServiceDetailPage({ params }: PageProps) {
             <h1 className="text-3xl font-bold text-gray-900">{service.title}</h1>
             <p className="mt-2 text-gray-600">{SERVICE_TYPES[service.type]}</p>
           </div>
-          <StatusBadge status={service.status} />
+          <div className="flex items-center space-x-3">
+            <UrgencyBadge urgency={service.urgency} />
+            <StatusBadge status={service.status} />
+          </div>
         </div>
       </div>
 

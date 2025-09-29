@@ -8,11 +8,12 @@ import {
   FunnelIcon,
   EyeIcon
 } from '@heroicons/react/24/outline'
-import { Service, ServiceStatus, ServiceType } from '@/lib/types'
+import { Service, ServiceStatus, ServiceType, ServiceUrgency } from '@/lib/types'
 import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
+import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -20,21 +21,53 @@ export default function AdminServicesPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<ServiceStatus | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<ServiceType | 'all'>('all')
+  const [urgencyFilter, setUrgencyFilter] = useState<ServiceUrgency | 'all'>('all')
+  const [sortBy, setSortBy] = useState<'created' | 'urgency' | 'status'>('urgency') 
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   const { data, error, isLoading } = useSWR('/api/services', fetcher)
 
   const services: Service[] = data?.services || []
 
-  const filteredServices = services.filter(service => {
-    const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         service.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         service.client?.company?.toLowerCase().includes(searchTerm.toLowerCase())
+  const getUrgencyPriority = (urgency: string) => {
+    switch (urgency) {
+      case 'asap': return 3
+      case 'fast': return 2
+      case 'no_rush': return 1
+      default: return 1
+    }
+  }
 
-    const matchesStatus = statusFilter === 'all' || service.status === statusFilter
-    const matchesType = typeFilter === 'all' || service.type === typeFilter
+  const filteredServices = services
+    .filter(service => {
+      const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           service.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           service.client?.company?.toLowerCase().includes(searchTerm.toLowerCase())
 
-    return matchesSearch && matchesStatus && matchesType
-  })
+      const matchesStatus = statusFilter === 'all' || service.status === statusFilter
+      const matchesType = typeFilter === 'all' || service.type === typeFilter
+      const matchesUrgency = urgencyFilter === 'all' || service.urgency === urgencyFilter
+
+      return matchesSearch && matchesStatus && matchesType && matchesUrgency
+    })
+    .sort((a, b) => {
+      let comparison = 0
+      
+      switch (sortBy) {
+        case 'urgency':
+          comparison = getUrgencyPriority(b.urgency) - getUrgencyPriority(a.urgency)
+          break
+        case 'status':
+          comparison = a.status.localeCompare(b.status)
+          break
+        case 'created':
+        default:
+          comparison = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          break
+      }
+      
+      return sortOrder === 'asc' ? -comparison : comparison
+    })
 
   const stats = {
     total: services.length,
@@ -147,6 +180,17 @@ export default function AdminServicesPage() {
 
             <div className="flex items-center space-x-4">
               <select
+                value={urgencyFilter}
+                onChange={(e) => setUrgencyFilter(e.target.value as ServiceUrgency | 'all')}
+                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="all">All Urgency</option>
+                <option value="asap">ASAP</option>
+                <option value="fast">Fast</option>
+                <option value="no_rush">No Rush</option>
+              </select>
+
+              <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as ServiceStatus | 'all')}
                 className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
@@ -199,6 +243,11 @@ export default function AdminServicesPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Type
                     </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={()=>{
+                      setSortOrder(sortOrder==='asc'?'desc':'asc');
+                    }}>
+                      <span>Urgency {(sortOrder==='asc'?'↓':'↑')}</span>
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
@@ -231,6 +280,9 @@ export default function AdminServicesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {SERVICE_TYPES[service.type]}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <UrgencyBadge urgency={service.urgency} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge status={service.status} />

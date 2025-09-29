@@ -5,6 +5,7 @@ import { relations } from 'drizzle-orm'
 export const serviceTypeEnum = pgEnum('service_type', ['nda', 'employee_onboarding', 'contract_review'])
 export const serviceStatusEnum = pgEnum('service_status', ['submitted', 'legal_review', 'client_review', 'complete'])
 export const userRoleEnum = pgEnum('user_role', ['client', 'admin'])
+export const serviceUrgencyEnum = pgEnum('service_urgency', ['asap', 'fast', 'no_rush'])
 
 // Tables
 export const clients = pgTable('clients', {
@@ -40,6 +41,7 @@ export const services = pgTable('services', {
   title: varchar('title', { length: 255 }).notNull(),
   type: serviceTypeEnum('type').notNull(),
   status: serviceStatusEnum('status').notNull().default('submitted'),
+  urgency: serviceUrgencyEnum('urgency').notNull().default('no_rush'),
   clientId: uuid('client_id').references(() => clients.id).notNull(),
   assignedAttorneyId: uuid('assigned_attorney_id').references(() => attorneys.id),
   formData: jsonb('form_data').notNull(),

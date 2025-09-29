@@ -82,6 +82,7 @@ export async function seed() {
         title: 'NDA with DataFlow Systems',
         type: 'nda',
         status: 'legal_review',
+        urgency: 'fast',
         clientId: clientsData[0].id,
         assignedAttorneyId: attorneysData[0].id,
         formData: {
@@ -97,6 +98,7 @@ export async function seed() {
         title: 'Employee Onboarding - John Smith',
         type: 'employee_onboarding',
         status: 'client_review',
+        urgency: 'asap',
         clientId: clientsData[0].id,
         assignedAttorneyId: attorneysData[1].id,
         formData: {
@@ -113,6 +115,7 @@ export async function seed() {
         title: 'SaaS Licensing Agreement Review',
         type: 'contract_review',
         status: 'submitted',
+        urgency: 'no_rush',
         clientId: clientsData[1].id,
         formData: {
           contract_title: 'SaaS Licensing Agreement',
@@ -127,6 +130,7 @@ export async function seed() {
         title: 'Partnership NDA with StartupX',
         type: 'nda',
         status: 'complete',
+        urgency: 'fast',
         clientId: clientsData[2].id,
         assignedAttorneyId: attorneysData[0].id,
         formData: {
@@ -141,6 +145,7 @@ export async function seed() {
         title: 'Marketing Manager Onboarding',
         type: 'employee_onboarding',
         status: 'legal_review',
+        urgency: 'no_rush',
         clientId: clientsData[1].id,
         assignedAttorneyId: attorneysData[1].id,
         formData: {

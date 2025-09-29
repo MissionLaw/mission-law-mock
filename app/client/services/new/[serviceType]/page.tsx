@@ -18,6 +18,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
   const router = useRouter()
   const [template, setTemplate] = useState<ServiceTemplate | null>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
+  const [urgency, setUrgency] = useState<'asap' | 'fast' | 'no_rush'>('no_rush')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -59,6 +60,7 @@ export default function ServiceRequestPage({ params }: PageProps) {
         body: JSON.stringify({
           title: generateTitle(template!, formData),
           type: resolvedParams.serviceType,
+          urgency,
           clientId: user.clientId,
           formData
         })
@@ -232,6 +234,22 @@ export default function ServiceRequestPage({ params }: PageProps) {
 
       <div className="bg-white shadow rounded-lg">
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
+          <div>
+            <label htmlFor="urgency" className="block text-sm font-medium text-gray-700">
+              Urgency Level <span className="text-red-500 ml-1">*</span>
+            </label>
+            <select
+              id="urgency"
+              value={urgency}
+              onChange={(e) => setUrgency(e.target.value as 'asap' | 'fast' | 'no_rush')}
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-3 py-2 text-gray-900 bg-white"
+            >
+              <option value="no_rush">No Rush</option>
+              <option value="fast">Fast</option>
+              <option value="asap">ASAP</option>
+            </select>
+          </div>
+
           {template.fields.map((field) => (
             <div key={field.id}>
               <label

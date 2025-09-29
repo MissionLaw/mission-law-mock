@@ -7,13 +7,16 @@ import {
   CalendarDaysIcon,
   BuildingOfficeIcon,
   EnvelopeIcon,
-  PencilIcon
+  PencilIcon,
+  ExclamationTriangleIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline'
-import { Service, ServiceStatus } from '@/lib/types'
+import { Service, ServiceStatus, ServiceUrgency } from '@/lib/types'
 import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDateTime } from '@/lib/utils'
+import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 interface PageProps {
   params: Promise<{
@@ -28,6 +31,7 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editData, setEditData] = useState({
     status: '' as ServiceStatus,
+    urgency: '' as ServiceUrgency,
     assignedAttorney: '',
     notes: [] as string[]
   })
@@ -47,6 +51,7 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
     if (service) {
       setEditData({
         status: service.status,
+        urgency: service.urgency,
         assignedAttorney: service.assignedAttorney || '',
         notes: service.notes || []
       })
@@ -136,6 +141,7 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
             <p className="mt-2 text-gray-600">{SERVICE_TYPES[service.type]}</p>
           </div>
           <div className="flex items-center space-x-3">
+            <UrgencyBadge urgency={service.urgency} />
             <StatusBadge status={service.status} />
             <Button
               onClick={isEditing ? handleSave : startEditing}
@@ -293,6 +299,25 @@ export default function AdminServiceDetailPage({ params }: PageProps) {
                     <div className="mt-1">
                       <StatusBadge status={service.status} />
                     </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Urgency Level
+                  </label>
+                  {isEditing ? (
+                    <select
+                      value={editData.urgency}
+                      onChange={(e) => setEditData(prev => ({ ...prev, urgency: e.target.value as ServiceUrgency }))}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="no_rush">No Rush</option>
+                      <option value="fast">Fast</option>
+                      <option value="asap">ASAP</option>
+                    </select>
+                  ) : (
+                    <UrgencyBadge urgency={service.urgency} />
                   )}
                 </div>
 

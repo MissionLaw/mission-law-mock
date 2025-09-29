@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     const service = await DatabaseService.createService({
       title: body.title,
       type: body.type,
+      urgency: body.urgency,
       clientId: body.clientId,
       formData: body.formData
     })
