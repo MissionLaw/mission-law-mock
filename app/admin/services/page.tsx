@@ -13,6 +13,7 @@ import { SERVICE_TYPES, SERVICE_STATUS_LABELS } from '@/lib/constants'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
+import { UrgencyBadge } from '@/components/ui/UrgencyBadge'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -281,17 +282,7 @@ export default function AdminServicesPage() {
                         {SERVICE_TYPES[service.type]}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${{
-                          asap: 'bg-red-100 text-red-800',
-                          fast: 'bg-orange-100 text-orange-800',
-                          no_rush: 'bg-green-100 text-green-800'
-                        }[service.urgency]}`}>
-                          {{
-                            asap: 'ASAP',
-                            fast: 'Fast',
-                            no_rush: 'No Rush'
-                          }[service.urgency]}
-                        </span>
+                        <UrgencyBadge urgency={service.urgency} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge status={service.status} />
