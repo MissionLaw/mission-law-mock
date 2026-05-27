@@ -4,6 +4,8 @@ A modern full-stack legal services management platform built with Next.js, TypeS
 
 ## 🚀 Quick Start
 
+> **Note:** Local Supabase runs in containers, so [Docker Desktop](https://www.docker.com/products/docker-desktop/) must be installed and running before you run `npm run setup`.
+
 ```bash
 npm install       # Install dependencies
 npm run setup     # Starts Supabase, applies schema, seeds data
